@@ -1,6 +1,8 @@
 <!-- ![FunKey OS Build](https://github.com/FunKey-Project/FunKey-OS/workflows/FunKey-OS%20Build/badge.svg) -->
 # FunKey OS
 
+> **Mollusk OS** is a fork of [DrUm78's FunKey-OS](https://github.com/DrUm78/FunKey-OS), which was archived in April 2026. All the sources the build fetches from the FunKey Project and DrUm78 are mirrored in the [mollusk-os](https://github.com/mollusk-os) organization and pinned to fixed commits.
+
 ## Intro
 This repository contains all the sources required to build FunKey OS, the Open-Source firmware at the heart of the [FunKey S retro-gaming console](https://www.funkey-project.com/).
 
@@ -79,13 +81,13 @@ $ sudo apt install bash bc binutils build-essential bzip2 ca-certificates cpio c
 When using either physical or virtual Linux machines, you must clone the FunKey OS repository from Github (here we place it into a `FunKey-OS` directory):
 
 ```bash
-$ git clone https://github.com/DrUm78/FunKey-OS.git FunKey-OS
+$ git clone https://github.com/mollusk-os/mollusk-os.git mollusk-os
 ```
 
 Then enter into the created directory:
 
 ```bash
-$ cd FunKey-OS
+$ cd mollusk-os
 ```
 
 ### Build the disk image & firmware update files
@@ -107,49 +109,24 @@ After building, you should obtain the SD Card image `FunKey-sdcard-X.Y.Z.img` an
 When using a Docker container, all the prerequisites are automatically installed.
 
 ### How to get the sources
-When using a Docker container, you must first create a new directory (here we create a `FunKey-OS` directory) and get the FunKey OS [Dockerfile](https://github.com/DrUm78/FunKey-OS/blob/master/docker/Dockerfile):
-```bash
-$ mkdir FunKey-OS
-$ cd FunKey-OS
-$ wget https://raw.githubusercontent.com/DrUm78/FunKey-OS/master/docker/Dockerfile -o Dockerfile
-```
-
-You must then build the docker image (don't forget the final dot!):
-```bash
-$ docker build -t DrUm78/funkey-os .
-```
+Clone the repository as described above. On Windows, clone it inside WSL2's Linux filesystem (e.g. `~/src/mollusk-os`), not under `/mnt/c`: Buildroot needs a case-sensitive filesystem with symlinks, and builds on `/mnt/c` are very slow.
 
 ### Build the disk image & firmware update files
-You may now build your FunKey with:
+The `docker/build.sh` script builds an Ubuntu 22.04 image with all the prerequisites, then runs `make` in a container with the checkout bind-mounted into it:
 ```bash
-$ docker run --name funkey-os DrUm78/funkey-os
+$ docker/build.sh
 ```
 
-Or alternatively, you can run it in the background with:
-```bash
-$ docker run -d --name funkey-os DrUm78/funkey-os
-```
+Any `make` target can be passed instead of the default `all`, for example `docker/build.sh sdk all`. The Buildroot ccache is kept in the `mollusk-os-ccache` Docker volume, so rebuilds are faster.
 
-If you launch it in the background, you can still follow what is going on with either:
-```bash
-$ docker top funkey-os
-```
-Or:
-```bash
-$ docker logs funkey-os
-```
+<ins>Note</ins>: Buildroot must not run as root, so the script builds as UID 1000 and changes the owner of the checkout to it if needed.
 
 This may take a while (~1h30), so consider getting yourself a cup, a glass or a bottle of your favorite beverage ;-)
 
 <ins>Note</ins>: you will need to have access to the network, since buildroot will download the package sources.
 
 ### Result of the build
-After building, you can copy the SD Card image `sdcard.img` and the firmware update file `FunKey-rootfs-X.Y.fwu` from the container into the host current directory:
-```bash
-$ mkdir images
-$ docker cp funkey-os:/home/funkey/FunKey-OS/images/FunKey-sdcard-X.Y.Z.img images/
-$ docker cp funkey-os:/home/funkey/FunKey-OS/images/FunKey-rootfs-X.Y.Z.fwu images/
-```
+As the checkout is shared with the container, the SD Card image and the firmware update file end up directly in the `images` directory.
 
 ## How to write to the SD card
 You can copy the bootable `images/sdcard.img` onto an SD card using "dd":

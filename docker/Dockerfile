@@ -1,12 +1,15 @@
-FROM debian:buster-20200514-slim
+FROM ubuntu:22.04
 
 LABEL \
-	maintainer="Michel Stempin <michel.stempin@funkey-project.com>" \
-	vendor="FunKey Project" \
-	description="Container with everything needed to build FunKey-OS"
+	description="Container with everything needed to build Mollusk OS (based on FunKey-OS)"
 
 # Setup environment
 ENV DEBIAN_FRONTEND noninteractive
+
+# UID/GID of the build user, so files written to the bind-mounted tree keep
+# a predictable owner (Buildroot must not be run as root)
+ARG UID=1000
+ARG GID=1000
 
 RUN \
 	# Install dependencies
@@ -14,19 +17,14 @@ RUN \
 	apt-get update && \
 	apt-get install -y -q --no-install-recommends \
 	# MANDATORY build tools
-	#which \
-	#sed \
 	make \
 	binutils \
 	build-essential \
 	gcc \
 	g++ \
-	#bash \
 	patch \
-	#gzip \
 	bzip2 \
 	perl \
-	#tar \
 	cpio \
 	unzip \
 	rsync \
@@ -35,88 +33,59 @@ RUN \
 	# MANDATORY source fetching tools
 	wget \
 	# OPTIONAL recommended dependencies
-	python \
-	python-dev \
+	python2 \
+	python2-dev \
 	xxd \
 	# OPTIONAL configuration interface dependencies
 	libncurses5-dev \
-	#libqt5-dev \
-	#libglib2.0-dev libgtk2.0-dev libglade2-dev \
 	# OPTIONAL source fetching tools
-	#bazaar \
-	# bzr \
 	cvs \
 	git \
 	mercurial \
-	rsync \
-	liblscp-dev \
 	subversion \
-	# OPTIONAL java related packages
-	#javacc \
-	#jarwrapper \
-	# OPTIONAL documentation generation tools
-	#asciidoc \
-	#w3m \
 	python3 \
 	python3-dev \
 	python3-distutils \
 	python3-setuptools \
-	#dblatex \
-	# OPTIONAL graph generation tools
-	#graphviz \
-	#python-matplotlib \
-	#
 	# ADDITIONAL dependency to get root certificates
 	ca-certificates \
 	# ADDITIONAL dependency to get client ssh
 	openssh-client \
-	# ADDITIONAL dependency to get unbuffer
+	# ADDITIONAL dependency to get unbuffer (used by buildroot/utils/brmake)
 	expect \
 	# ADDITIONAL dependency to get locale-gen
 	locales \
 	# ADDITIONAL nice to have dependencies
-	sudo \
 	procps \
 	&& \
 	apt-get -y autoremove && \
 	apt-get -y clean && \
 	rm -rf /var/lib/apt/lists/* && \
 	#
+	# The original buster image provided "python" as Python 2
+	ln -sf /usr/bin/python2 /usr/bin/python && \
+	#
 	# Set locale
 	sed -i 's/# \(en_US.UTF-8\)/\1/' /etc/locale.gen && \
-	locale-gen --purge --lang en_US.UTF-8  && \
+	locale-gen --purge --lang en_US.UTF-8 && \
 	#
 	# Add user
-	useradd -ms /bin/bash funkey && \
-	usermod -a -G sudo funkey && \
-	echo "funkey:funkey" | chpasswd && \
-	#
-	# Clone the FunKey-OS repository
-	git clone https://github.com/DrUm78/FunKey-OS.git /home/funkey/FunKey-OS && \
-	#
-	# Set file ownership
-	chown -R funkey:funkey /home/funkey
+	groupadd -g ${GID} builder && \
+	useradd -ms /bin/bash -u ${UID} -g ${GID} builder && \
+	mkdir -p /home/builder/.buildroot-ccache && \
+	chown -R builder:builder /home/builder && \
+	# The tree is bind-mounted and may be owned by another host UID
+	git config --system --add safe.directory '*'
 
 # Set user
-USER funkey
+USER builder
 
-# Set working directory
-WORKDIR /home/funkey/FunKey-OS
+# Source tree is bind-mounted here by docker/build.sh
+WORKDIR /home/builder/mollusk-os
 
 # Set environment
 ENV \
-	HOME=/home/funkey \
+	HOME=/home/builder \
 	LC_ALL=en_US.UTF-8
 
-# VOLUME ["/home/funkey/.buildroot-ccache", \
-# 	"/home/funkey/FunKey-OS/buildroot", \
-# 	"/home/funkey/FunKey-OS/dowload", \
-# 	"/home/funkey/FunKey-OS/images", \
-# 	"/home/funkey/FunKey-OS/Recovery/output/build", \
-# 	"/home/funkey/FunKey-OS/Recovery/output/host", \
-# 	"/home/funkey/FunKey-OS/Recovery/output/target", \
-# 	"/home/funkey/FunKey-OS/FunKey/output/host", \
-# 	"/home/funkey/FunKey-OS/FunKey/output/build", \
-# 	"/home/funkey/FunKey-OS/FunKey/output/target"]
-
-CMD ["/usr/bin/make", "sdk", "all", "-C", "/home/funkey/FunKey-OS"]
+CMD ["/usr/bin/make", "all"]
