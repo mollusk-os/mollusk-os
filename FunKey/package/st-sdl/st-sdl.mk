@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-ST_SDL_VERSION = HEAD
+ST_SDL_VERSION = bb4cacb2820f2a17d761e331e10b09976bc53604
 ST_SDL_SITE_METHOD = git
 ST_SDL_SITE = https://github.com/DrUm78/st-sdl.git
 ST_SDL_LICENSE = MIT/X11

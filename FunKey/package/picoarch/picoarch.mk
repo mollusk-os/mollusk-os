@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-PICOARCH_VERSION = HEAD
+PICOARCH_VERSION = 0fe4612edb5ff6fcb4c7c8760289f60a94fb85da
 PICOARCH_SITE_METHOD = git
 PICOARCH_SITE = https://github.com/DrUm78/picoarch.git
 PICOARCH_LICENSE = GPL-2+, LGPL-2.1+, MAME
@@ -20,7 +20,7 @@ PICOARCH_CFLAGS += -DFUNKEY_S -Ofast -DNDEBUG  -D_LARGEFILE_SOURCE -D_LARGEFILE6
 PICOARCH_CFLAGS += -Wall -fdata-sections -ffunction-sections -flto
 PICOARCH_CFLAGS += -I./ -I./libretro-common/include/
 
-PICOARCH_GIT_REVISION ?= $(shell cut -c1-7 "$(@D)/../../../../download/picoarch/git/.git/FETCH_HEAD")
+PICOARCH_GIT_REVISION ?= $(shell echo $(PICOARCH_VERSION) | cut -c1-7)
 PICOARCH_CFLAGS += -DREVISION=\"$(PICOARCH_GIT_REVISION)\"
 
 PICOARCH_LIBS += $(PICOARCH_SDL_LIBS)
