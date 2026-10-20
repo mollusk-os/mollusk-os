@@ -1,3 +1,3 @@
 [submodule "buildroot"]
 	path = buildroot
-	url = https://github.com/DrUm78/buildroot.git
+	url = https://github.com/mollusk-os/buildroot.git

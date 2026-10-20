@@ -5,7 +5,7 @@
 #############################################################
 COMMANDER_VERSION = ee3fb036bec981e03b043d7191094efe40a5a98d
 COMMANDER_SITE_METHOD = git
-COMMANDER_SITE = https://github.com/DrUm78/commander.git
+COMMANDER_SITE = https://github.com/mollusk-os/commander.git
 COMMANDER_LICENSE = GPL-2.0
 
 COMMANDER_DEPENDENCIES = sdl sdl_ttf sdl_gfx
