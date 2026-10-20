@@ -6,7 +6,7 @@
 
 BIBI_VERSION = Bibi-FunKey-1.0.0
 BIBI_SITE_METHOD = git
-BIBI_SITE = https://github.com/FunKey-Project/Bibi.git
+BIBI_SITE = https://github.com/mollusk-os/Bibi.git
 BIBI_SITE_LICENSE = GPL-2.1+
 BIBI_SITE_LICENSE_FILES = COPYING
 

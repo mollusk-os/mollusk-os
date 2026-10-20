@@ -6,7 +6,7 @@
 
 PRODSCREENS_VERSION = FunKey-ProdScreens-FunKey-1.1.2
 PRODSCREENS_SITE_METHOD = git
-PRODSCREENS_SITE = https://github.com/FunKey-Project/FunKey-ProdScreens.git
+PRODSCREENS_SITE = https://github.com/mollusk-os/FunKey-ProdScreens.git
 PRODSCREENS_SITE_LICENSE = GPL-2.1+
 PRODSCREENS_SITE_LICENSE_FILES = COPYING
 

@@ -6,7 +6,7 @@
 
 PICOARCH_VERSION = 0fe4612edb5ff6fcb4c7c8760289f60a94fb85da
 PICOARCH_SITE_METHOD = git
-PICOARCH_SITE = https://github.com/DrUm78/picoarch.git
+PICOARCH_SITE = https://github.com/mollusk-os/picoarch.git
 PICOARCH_LICENSE = GPL-2+, LGPL-2.1+, MAME
 PICOARCH_LICENSE_FILES = LICENSE
 
