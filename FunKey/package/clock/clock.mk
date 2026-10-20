@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CLOCK_VERSION = HEAD
+CLOCK_VERSION = f0aa7a547d4ebfaab156d93781f52a4b072e4dda
 CLOCK_SITE_METHOD = git
 CLOCK_SITE = https://github.com/DrUm78/clock_sdl_app.git
 CLOCK_LICENSE = GPL-2.1+
