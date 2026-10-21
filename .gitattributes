@@ -1,0 +1,2 @@
+# Raw RGB565 frames for <animatedImage>: never convert line endings or diff as text
+*.rgb565 binary
