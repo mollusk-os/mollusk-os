@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_VITAQUAKE2
+	bool "libretro-vitaquake2"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Quake II engine (vitaQuake II) core for picoarch.
+
+	  https://github.com/mollusk-os/vitaquake2

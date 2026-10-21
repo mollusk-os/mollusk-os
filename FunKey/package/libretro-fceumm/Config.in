@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_FCEUMM
+	bool "libretro-fceumm"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  NES emulator (FCEUmm) core for picoarch.
+
+	  https://github.com/libretro/libretro-fceumm

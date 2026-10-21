@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_FBALPHA2012
+	bool "libretro-fbalpha2012"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Arcade emulator (Final Burn Alpha 2012) core for picoarch.
+
+	  https://github.com/libretro/fbalpha2012

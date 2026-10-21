@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_MEDNAFEN_NGP
+	bool "libretro-mednafen-ngp"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Neo Geo Pocket emulator (Beetle NeoPop) core for picoarch.
+
+	  https://github.com/libretro/beetle-ngp-libretro

@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_PICODRIVE
+	bool "libretro-picodrive"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Master System / Genesis / 32X emulator (PicoDrive) core for picoarch.
+
+	  https://github.com/libretro/picodrive

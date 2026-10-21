@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_MEDNAFEN_WSWAN
+	bool "libretro-mednafen-wswan"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  WonderSwan emulator (Beetle WonderSwan) core for picoarch.
+
+	  https://github.com/libretro/beetle-wswan-libretro

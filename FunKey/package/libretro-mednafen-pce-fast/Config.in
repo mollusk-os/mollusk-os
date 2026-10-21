@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_MEDNAFEN_PCE_FAST
+	bool "libretro-mednafen-pce-fast"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  PC Engine / TurboGrafx-16 emulator (Beetle PCE Fast) core for picoarch.
+
+	  https://github.com/libretro/beetle-pce-fast-libretro
