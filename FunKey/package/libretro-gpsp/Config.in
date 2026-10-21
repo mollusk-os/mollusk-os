@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_GPSP
+	bool "libretro-gpsp"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Game Boy Advance emulator (gpSP) core for picoarch.
+
+	  https://github.com/libretro/gpsp

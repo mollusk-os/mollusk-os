@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_MEDNAFEN_LYNX
+	bool "libretro-mednafen-lynx"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Atari Lynx emulator (Beetle Lynx) core for picoarch.
+
+	  https://github.com/libretro/beetle-lynx-libretro

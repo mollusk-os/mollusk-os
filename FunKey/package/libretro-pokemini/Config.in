@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_POKEMINI
+	bool "libretro-pokemini"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Pokemon Mini emulator (PokeMini) core for picoarch.
+
+	  https://github.com/libretro/pokemini

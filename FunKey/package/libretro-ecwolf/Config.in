@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_ECWOLF
+	bool "libretro-ecwolf"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Wolfenstein 3D engine (ECWolf) core for picoarch.
+
+	  https://github.com/libretro/ecwolf

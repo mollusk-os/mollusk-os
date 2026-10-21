@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_TYRQUAKE
+	bool "libretro-tyrquake"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Quake engine (TyrQuake) core for picoarch.
+
+	  https://github.com/mollusk-os/tyrquake

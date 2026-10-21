@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_SNES9X2005
+	bool "libretro-snes9x2005"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  SNES emulator (Snes9x 2005) core for picoarch.
+
+	  https://github.com/libretro/snes9x2005

@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_PCSX_REARMED
+	bool "libretro-pcsx-rearmed"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  PlayStation emulator (PCSX ReARMed) core for picoarch.
+
+	  https://github.com/libretro/pcsx_rearmed

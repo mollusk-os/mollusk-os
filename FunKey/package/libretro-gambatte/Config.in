@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_GAMBATTE
+	bool "libretro-gambatte"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Game Boy / Game Boy Color emulator (Gambatte) core for picoarch.
+
+	  https://github.com/libretro/gambatte-libretro

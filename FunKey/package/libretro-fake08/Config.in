@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_FAKE08
+	bool "libretro-fake08"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  PICO-8 emulator (FAKE-08) core for picoarch.
+
+	  https://github.com/jtothebell/fake-08

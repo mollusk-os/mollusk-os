@@ -1,0 +1,8 @@
+config BR2_PACKAGE_LIBRETRO_PRBOOM
+	bool "libretro-prboom"
+	default y
+	depends on BR2_PACKAGE_PICOARCH
+	help
+	  Doom engine (PrBoom) core for picoarch.
+
+	  https://github.com/mollusk-os/libretro-prboom
