@@ -101,7 +101,7 @@ This may take a while (~1h30), so consider getting yourself a cup, a glass or a 
 <ins>Note</ins>: you will need to have access to the network, since buildroot will download the package sources.
 
 ### Result of the build
-After building, you should obtain the SD Card image `FunKey-MolluskOS-X.Y.Z-sdcard.img`, the firmware update file `FunKey-MolluskOS-X.Y.Z.fwu` and the add-on packs `MolluskOS-Games-X.Y.zip` and `MolluskOS-Themes-X.Y.zip` in the `images` directory. The version, X.Y.Z, is `MOLLUSK_VERSION` in the `Makefile`.
+After building, you should obtain the SD Card image `FunKey-MolluskOS-X.Y.Z-sdcard.img`, the firmware update file `FunKey-MolluskOS-X.Y.Z.fwu` and the add-on packs `MolluskOS-Games-X.Y.zip` and `MolluskOS-Themes-X.Y.zip` in the `images` directory. The version, X.Y.Z, comes from the `VERSION` file, which also sets the version the system reports (in `/etc/os-release` and in the Recovery menu's Information screen).
 
 ## Build in a container
 
