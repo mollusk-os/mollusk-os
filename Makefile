@@ -31,10 +31,12 @@ TERM_RESET := $(shell tput rmso 2>/dev/null)
 
 .PHONY: fun source image update packs sdcard-rootfs defconfig clean distclean
 
-# The Mollusk OS release: its version, and the names of the SD card image and the
-# firmware update file. The update file's name must start with "FunKey-": the Recovery
-# and the share script only pick up /mnt/FunKey-*.fwu.
-MOLLUSK_VERSION = 1.0.0
+# The Mollusk OS release: its version, from the VERSION file (post-build.sh also
+# writes it into the system's /etc/os-release, /etc/issue and /etc/sw-versions),
+# and the names of the SD card image and the firmware update file. The update
+# file's name must start with "FunKey-": the Recovery and the share script only
+# pick up /mnt/FunKey-*.fwu.
+MOLLUSK_VERSION := $(shell cat VERSION)
 RELEASE = FunKey-MolluskOS-$(MOLLUSK_VERSION)
 
 # Add-on packs, installed from the USB drive (see docs/packs.md)
