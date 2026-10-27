@@ -31,6 +31,12 @@ TERM_RESET := $(shell tput rmso 2>/dev/null)
 
 .PHONY: fun source image update packs sdcard-rootfs defconfig clean distclean
 
+# The Mollusk OS release: its version, and the names of the SD card image and the
+# firmware update file. The update file's name must start with "FunKey-": the Recovery
+# and the share script only pick up /mnt/FunKey-*.fwu.
+MOLLUSK_VERSION = 1.0.0
+RELEASE = FunKey-MolluskOS-$(MOLLUSK_VERSION)
+
 # Add-on packs, installed from the USB drive (see docs/packs.md)
 PACK_VERSION = 1.0
 GAMES_PACK = images/MolluskOS-Games-$(PACK_VERSION).zip
@@ -134,7 +140,7 @@ image: sdcard-rootfs
 	@mkdir -p root tmp
 	@./Recovery/output/host/bin/genimage --loglevel 0 --inputpath .
 	@rm -rf root tmp
-	@mv images/sdcard.img images/FunKey-sdcard-DrUm78.img
+	@mv images/sdcard.img images/$(RELEASE)-sdcard.img
 
 image-prod: sdcard-rootfs
 	@$(call MESSAGE,"Creating disk image")
@@ -142,13 +148,13 @@ image-prod: sdcard-rootfs
 	@mkdir -p root tmp
 	@./Recovery/output/host/bin/genimage --loglevel 0 --config "genimage-prod.cfg" --inputpath .
 	@rm -rf root tmp
-	@mv images/sdcard-prod.img images/FunKey-sdcard-prod-DrUm78.img
+	@mv images/sdcard-prod.img images/$(RELEASE)-sdcard-prod.img
 
 update: fun
 	@$(call MESSAGE,"Creating update file")
 	@rm -rf tmp
 	@mkdir -p tmp
-	@cp FunKey/board/funkey/sw-description tmp/
+	@sed 's/@VERSION@/$(MOLLUSK_VERSION)/' FunKey/board/funkey/sw-description > tmp/sw-description
 	@cp FunKey/board/funkey/update_partition tmp/
 	@cd FunKey/output/images && \
 	rm -f rootfs.ext2.gz && \
@@ -157,7 +163,7 @@ update: fun
 	@cd tmp && \
 	echo sw-description rootfs.ext2.gz update_partition | \
 	tr " " "\n" | \
-	cpio -o -H crc --quiet > ../images/FunKey-rootfs-DrUm78.fwu
+	cpio -o -H crc --quiet > ../images/$(RELEASE).fwu
 	@rm -rf tmp
 
 defconfig:
