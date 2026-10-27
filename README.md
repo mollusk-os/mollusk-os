@@ -101,7 +101,7 @@ This may take a while (~1h30), so consider getting yourself a cup, a glass or a 
 <ins>Note</ins>: you will need to have access to the network, since buildroot will download the package sources.
 
 ### Result of the build
-After building, you should obtain the SD Card image `FunKey-sdcard-X.Y.Z.img`, the firmware update file `FunKey-rootfs-X.Y.fwu` and the add-on packs `MolluskOS-Games-X.Y.zip` and `MolluskOS-Themes-X.Y.zip` in the `images` directory.
+After building, you should obtain the SD Card image `FunKey-MolluskOS-X.Y.Z-sdcard.img`, the firmware update file `FunKey-MolluskOS-X.Y.Z.fwu` and the add-on packs `MolluskOS-Games-X.Y.zip` and `MolluskOS-Themes-X.Y.zip` in the `images` directory. The version, X.Y.Z, is `MOLLUSK_VERSION` in the `Makefile`.
 
 ## Build in a container
 
@@ -129,10 +129,10 @@ This may take a while (~1h30), so consider getting yourself a cup, a glass or a 
 As the checkout is shared with the container, the SD Card image, the firmware update file and the add-on packs end up directly in the `images` directory.
 
 ## How to write to the SD card
-You can copy the bootable `images/sdcard.img` onto an SD card using "dd":
+You can copy the bootable `images/FunKey-MolluskOS-X.Y.Z-sdcard.img` onto an SD card using "dd":
 
 ```bash
-$ sudo dd if=images/FunKey-sdcard-X.Y.Z.img of=/dev/sdX
+$ sudo dd if=images/FunKey-MolluskOS-X.Y.Z-sdcard.img of=/dev/sdX
 ```
 <ins>Warning</ins>: Please make sure that */dev/sdX* device corresponds to your SD Card, otherwise you may wipe out one of your hard drive partitions!
 
@@ -153,7 +153,7 @@ It is possible to update a FunKey-S over USB:
  - Connect the FunKey S console to your host machine using the USB cable
  - From the retro-game launcher, press the **ON/OFF** button to access the menu
  - Using the **Up/Down** keys, select the "**MOUNT USB**" screen ad press the "**A**" key twice to mount the FunKey S on your machine as an USB mass storage drive
- - Drag and drop the images/FunKey-rootfs-X.Y.fwu file into it
+ - Drag and drop the images/FunKey-MolluskOS-X.Y.Z.fwu file into it (keep its name: the FunKey only picks up update files named `FunKey-*.fwu`)
  - When finished, eject the USB mass storage from your host machine
  - Back on the FunKey S console, press the "**A**" key twice to eject the USB mass storage drive
  - The FunKey S console will automatically detect the firmware update file and proceed with the update before returning to the retro game launcher screen once finished
