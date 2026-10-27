@@ -1,0 +1,46 @@
+#!/bin/sh
+# Compressed swap in RAM (zram), used before the swap partition on the SD card.
+#
+# Memory pages that would otherwise be written to the SD card are compressed
+# (LZ4) and kept in RAM, where getting them back is much faster. The swap
+# partition on the SD card stays as overflow, at a lower priority, for when
+# the zram device is full.
+
+# Uncompressed size of the zram swap. How much RAM it takes depends on how
+# well the swapped-out data compresses: from about a third to nearly all of
+# what it holds. Measured on a FunKey S under heavy memory use: 48M did
+# better than both 32M (more went to the SD card) and 64M (zram's own RAM
+# use left too little for the rest).
+#
+# The swap read-ahead (vm.page-cluster) stays at the kernel's default:
+# what doesn't fit in zram goes to the SD card, where reading pages
+# ahead matters. Reading single pages, as is usual with zram alone, made
+# the same test slower.
+ZRAM_SIZE=48M
+ZRAM_ALGORITHM=lz4
+ZRAM_PRIORITY=100
+
+case "$1" in
+    start)
+	if [ ! -e /sys/block/zram0 ]; then
+	    echo "Starting zram: not in this kernel"
+	    exit 0
+	fi
+	grep -q '^/dev/zram0 ' /proc/swaps && exit 0
+	echo ${ZRAM_ALGORITHM} > /sys/block/zram0/comp_algorithm 2>/dev/null
+	if echo ${ZRAM_SIZE} > /sys/block/zram0/disksize && \
+	   mkswap /dev/zram0 >/dev/null 2>&1 && \
+	   swapon -p ${ZRAM_PRIORITY} /dev/zram0; then
+	    echo "Starting zram: OK"
+	else
+	    echo "Starting zram: ERROR"
+	    exit 1
+	fi
+	;;
+    stop)
+	;;
+    *)
+	echo "Usage: $0 {start|stop}" >&2
+	exit 1
+	;;
+esac
