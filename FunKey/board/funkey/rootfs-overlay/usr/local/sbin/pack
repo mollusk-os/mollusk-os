@@ -1,0 +1,174 @@
+#!/bin/sh
+
+# Install Mollusk OS add-on packs (games, themes...) onto the USB drive
+#
+# A pack is a zip file whose contents mirror the USB drive, with a pack.ini
+# file at its root:
+#
+#     name=Themes
+#     version=1.0
+#
+# Its files are extracted onto the drive, overwriting older copies. Every
+# theme it contains (FunKey/.retrofe/layouts/<theme>/layout.xml) is added to
+# the user theme list, and its pack.ini is kept in FunKey/.packs/.
+#
+# Usage: pack install FILE   install the pack FILE (FILE is kept)
+#        pack scan           install every MolluskOS-*.zip pack found at the
+#                            root of the USB drive, deleting each one once it
+#                            is installed. Exits with 0 if at least one pack
+#                            was installed, 1 otherwise.
+
+# Uncomment the following line to get debug info
+#set -x
+
+SELF=${SELF:-$(basename $0)}
+
+source /usr/local/lib/utils
+
+# Where the USB drive is mounted and where the built-in themes are
+# (overridable for testing)
+DRIVE=${PACK_DRIVE:-/mnt}
+BUILTIN_LAYOUTS=${PACK_BUILTIN_LAYOUTS:-/usr/games/layouts}
+
+USER_LAYOUTS="${DRIVE}/FunKey/.retrofe/layouts"
+RECORDS="${DRIVE}/FunKey/.packs"
+
+usage () {
+    >&2 echo "Usage: ${SELF} install FILE"
+    >&2 echo "       ${SELF} scan"
+    exit 1
+}
+
+# Print a value from a pack's pack.ini: manifest_value FILE KEY
+manifest_value () {
+    unzip -p "${1}" pack.ini 2>/dev/null | tr -d '\r' | \
+	sed -n "s/^[[:space:]]*${2}[[:space:]]*=[[:space:]]*//p" | head -n 1
+}
+
+# List the paths stored in a zip file, one per line
+zip_paths () {
+    unzip -l "${1}" 2>/dev/null | \
+	sed -n 's/^ *[0-9]\{1,\} \{1,\}[0-9-]\{8,\} \{1,\}[0-9:]\{4,\} \{1,\}//p'
+}
+
+# Print the total uncompressed size of a zip file, in KiB
+zip_size_kb () {
+    unzip -l "${1}" 2>/dev/null | tail -n 1 | awk '{ printf "%d\n", $1 / 1024 + 1 }'
+}
+
+# Print the free space on the USB drive, in KiB (nothing if unknown)
+drive_free_kb () {
+    df -Pk "${DRIVE}" 2>/dev/null | awk 'NR > 1 && $4 ~ /^[0-9]+$/ { print $4; exit }'
+}
+
+# Add a theme to the user theme list, unless it is built in or already listed
+register_theme () {
+    local theme="${1}"
+    local list="${USER_LAYOUTS}/layouts.list"
+
+    if [ -d "${BUILTIN_LAYOUTS}/${theme}" ]; then
+	info "${theme} is a built-in theme, not adding it to the user theme list"
+	return 0
+    fi
+    if [ -f "${list}" ] && tr -d '\r' < "${list}" | grep -qxF "${theme}"; then
+	return 0
+    fi
+
+    # The list may not end with a new line
+    if [ -s "${list}" ] && [ -n "$(tail -c 1 "${list}")" ]; then
+	echo >> "${list}"
+    fi
+    echo "${theme}" >> "${list}"
+    info "added the theme ${theme} to ${list}"
+    return 0
+}
+
+install_pack () {
+    local file="${1}"
+    local name version label need free record
+
+    if [ ! -f "${file}" ]; then
+	warn "${file}: no such file"
+	return 1
+    fi
+
+    name=$(manifest_value "${file}" name)
+    version=$(manifest_value "${file}" version)
+    if [ -z "${name}" ]; then
+	warn "${file} is not a Mollusk OS pack (no name in its pack.ini), skipping it"
+	return 1
+    fi
+    label=$(echo "${name} pack" | tr 'a-z' 'A-Z')
+
+    # Check that the files fit on the drive (counting them all as new files)
+    need=$(zip_size_kb "${file}")
+    free=$(drive_free_kb)
+    if [ -n "${need}" ] && [ -n "${free}" ] && [ "${free}" -lt "${need}" ]; then
+	warn "${file} needs ${need} KiB, only ${free} KiB free on the drive"
+	notif set 4 " NOT ENOUGH SPACE FOR THE^ ${label}"
+	return 1
+    fi
+
+    info "installing ${name} ${version} from ${file}"
+    notif set 0 " INSTALLING THE ${label}...^DO NOT TURN OFF THE CONSOLE"
+    unzip -o -q "${file}" -x pack.ini -d "${DRIVE}"
+    if [ $? -ne 0 ]; then
+	sync
+	warn "cannot extract ${file}"
+	notif set 4 " CANNOT INSTALL THE^ ${label}"
+	return 1
+    fi
+
+    # Make the themes it contains show up in the theme menu
+    mkdir -p "${USER_LAYOUTS}"
+    zip_paths "${file}" | \
+	sed -n 's|^FunKey/\.retrofe/layouts/\([^/]\{1,\}\)/layout\.xml$|\1|p' | \
+	sort -u | while read -r theme; do
+	register_theme "${theme}"
+    done
+
+    # Keep a record of the installed pack
+    mkdir -p "${RECORDS}"
+    record=$(printf "%s" "${name}" | tr -c 'A-Za-z0-9._-' '_')
+    unzip -p "${file}" pack.ini > "${RECORDS}/${record}.ini" 2>/dev/null
+
+    sync
+    info "installed ${name} ${version}"
+    notif set 2 " ${label} INSTALLED"
+    return 0
+}
+
+scan_packs () {
+    local installed=1
+    local file
+
+    set +f
+    for file in "${DRIVE}"/MolluskOS-*.zip; do
+	[ -f "${file}" ] || continue
+	if install_pack "${file}"; then
+	    rm -f "${file}"
+	    installed=0
+	fi
+    done
+    sync
+    return ${installed}
+}
+
+case "${1}" in
+    install)
+	if [ ${#} -ne 2 ]; then
+	    usage
+	fi
+	install_pack "${2}"
+	;;
+    scan)
+	if [ ${#} -ne 1 ]; then
+	    usage
+	fi
+	scan_packs
+	;;
+    *)
+	usage
+	;;
+esac
+exit $?

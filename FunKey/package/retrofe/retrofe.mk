@@ -5,7 +5,7 @@
 ################################################################################
 
 # Branch animated-backgrounds: RetroFE-FunKey-1.1.4 plus the <animatedImage> component
-RETROFE_VERSION = c10ec0dea98e73fc1e913866b9f6720134cb0ec8
+RETROFE_VERSION = 584a71319e956946c7cbe15c9e66f0215ef4d9d9
 RETROFE_SITE_METHOD = git
 RETROFE_SITE = https://github.com/mollusk-os/RetroFE.git
 RETROFE_DEPENDENCIES = gstreamer1 gst1-plugins-base sdl sdl_image sdl_mixer sdl_sound sdl_ttf libglib2 sqlite zlib

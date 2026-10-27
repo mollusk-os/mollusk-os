@@ -21,3 +21,12 @@ ln -s /tmp ${TARGET_DIR}/etc/dropbear
 
 # Change dropbear init sequence
 mv ${TARGET_DIR}/etc/init.d/S50dropbear ${TARGET_DIR}/etc/init.d/S42dropbear
+
+# Built-in launcher themes, from the themes/ folder of the repository (the
+# other themes there go into the themes pack). Listed in the overlay's
+# usr/games/layouts/layouts.list; KoiGlass is the default (layout.conf).
+THEMES_DIR="$(dirname "$0")/../../../themes"
+for theme in KoiGlass; do
+    rm -rf "${TARGET_DIR}/usr/games/layouts/${theme}"
+    cp -rL "${THEMES_DIR}/${theme}" "${TARGET_DIR}/usr/games/layouts/${theme}" || exit 1
+done

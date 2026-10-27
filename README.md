@@ -101,7 +101,7 @@ This may take a while (~1h30), so consider getting yourself a cup, a glass or a 
 <ins>Note</ins>: you will need to have access to the network, since buildroot will download the package sources.
 
 ### Result of the build
-After building, you should obtain the SD Card image `FunKey-sdcard-X.Y.Z.img` and the firmware update file `FunKey-rootfs-X.Y.fwu` in the `images` directory.
+After building, you should obtain the SD Card image `FunKey-sdcard-X.Y.Z.img`, the firmware update file `FunKey-rootfs-X.Y.fwu` and the add-on packs `MolluskOS-Games-X.Y.zip` and `MolluskOS-Themes-X.Y.zip` in the `images` directory.
 
 ## Build in a container
 
@@ -126,7 +126,7 @@ This may take a while (~1h30), so consider getting yourself a cup, a glass or a 
 <ins>Note</ins>: you will need to have access to the network, since buildroot will download the package sources.
 
 ### Result of the build
-As the checkout is shared with the container, the SD Card image and the firmware update file end up directly in the `images` directory.
+As the checkout is shared with the container, the SD Card image, the firmware update file and the add-on packs end up directly in the `images` directory.
 
 ## How to write to the SD card
 You can copy the bootable `images/sdcard.img` onto an SD card using "dd":
@@ -145,6 +145,9 @@ Once the SD card is burnt, insert it into your FunKey S console slot, and
 power it up. Your new system should come up now and start a console on
 the UART0 serial port and display the retro game launcher on the graphical screen.
 
+The first boot sets up the card and installs the games that come with the
+image (the games pack, see below).
+
 ## How to update the FunKey S firmware
 It is possible to update a FunKey-S over USB:
  - Connect the FunKey S console to your host machine using the USB cable
@@ -154,3 +157,8 @@ It is possible to update a FunKey-S over USB:
  - When finished, eject the USB mass storage from your host machine
  - Back on the FunKey S console, press the "**A**" key twice to eject the USB mass storage drive
  - The FunKey S console will automatically detect the firmware update file and proceed with the update before returning to the retro game launcher screen once finished
+
+Firmware updates don't carry the games anymore: the games on the USB drive are left as they are (deleted ones stay deleted), and the launcher theme you picked is kept.
+
+## Add-on packs
+Games and extra launcher themes come in add-on packs: `MolluskOS-Games-X.Y.zip` (the freeware and homebrew games, the FPS demos and EDuke32) and `MolluskOS-Themes-X.Y.zip` (animated launcher themes). To install one, copy the zip file as it is to the root of the FunKey's USB drive (with **MOUNT USB**, as above), then eject: the FunKey installs it and restarts the launcher. See [docs/packs.md](docs/packs.md), which also explains how to make your own packs.
