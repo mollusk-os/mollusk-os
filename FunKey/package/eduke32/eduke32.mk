@@ -30,7 +30,11 @@ define EDUKE32_BUILD_CMDS
 		eduke32
 endef
 
-# Same layout as build_funkey.sh: the game data in opk/ plus the binary
+# Same layout as build_funkey.sh: the game data in opk/ plus the binary. The times are
+# fixed (2026-01-01) so that the OPK comes out the same on every build: the games pack
+# remover recognizes the pack's files by their checksums.
+EDUKE32_OPK_TIME = 1767225600
+
 define EDUKE32_INSTALL_IMAGES_CMDS
 	rm -rf $(@D)/opk-build
 	cp -a $(EDUKE32_SRC_DIR)/opk $(@D)/opk-build
@@ -38,7 +42,8 @@ define EDUKE32_INSTALL_IMAGES_CMDS
 	$(TARGET_STRIP) $(@D)/opk-build/eduke32
 	$(INSTALL) -d -m 0755 "$(EDUKE32_OPK_DIR)"
 	$(HOST_DIR)/usr/bin/mksquashfs $(@D)/opk-build "$(EDUKE32_OPK_DIR)/eduke32_funkey-s.opk" \
-		-all-root -noappend -no-exports -no-xattrs
+		-all-root -noappend -no-exports -no-xattrs \
+		-mkfs-time $(EDUKE32_OPK_TIME) -all-time $(EDUKE32_OPK_TIME)
 	chmod 0644 "$(EDUKE32_OPK_DIR)/eduke32_funkey-s.opk"
 endef
 

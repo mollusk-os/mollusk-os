@@ -40,6 +40,7 @@ RELEASE = FunKey-MolluskOS-$(MOLLUSK_VERSION)
 # Add-on packs, installed from the USB drive (see docs/packs.md)
 PACK_VERSION = 1.0
 GAMES_PACK = images/MolluskOS-Games-$(PACK_VERSION).zip
+GAMES_REMOVER = images/MolluskOS-Remove-Games-$(PACK_VERSION).zip
 THEMES_PACK = images/MolluskOS-Themes-$(PACK_VERSION).zip
 THEMES_PACK_THEMES = AnimatedDemo KoiGlass KoiLilyPond KoiMoonlight
 
@@ -124,6 +125,8 @@ packs: fun
 		--description "Freeware and homebrew games, the demos of the FPS classics, EDuke32" \
 		--output $(GAMES_PACK) \
 		packs/games/freeware_games.zip packs/games/files FunKey/output/images/packs/games
+	@python3 tools/make-remover.py --pack $(GAMES_PACK) --also packs/games/known-versions.md5 \
+		--output $(GAMES_REMOVER)
 	@python3 tools/make-pack.py --name Themes --version $(PACK_VERSION) \
 		--description "Animated launcher themes" \
 		--output $(THEMES_PACK) \

@@ -41,14 +41,18 @@ def join(dest, rel):
 
 
 def collect(sources):
-    """Return {path in the pack: (kind, source)} for every file."""
-    files = {}
+    """Return {path in the pack: (kind, source)} for every file, and the folders the
+    sources list, so that empty ones (e.g. a place for the user to put something) are
+    kept."""
+    files, folders = {}, set()
     for spec in sources:
         src, _, dest = spec.partition("=")
         dest = clean_path(dest, "destination")
         if os.path.isdir(src):
             for root, dirs, names in os.walk(src, followlinks=True):
                 dirs.sort()
+                if not dirs and not names and root != src:
+                    folders.add(join(dest, clean_path(os.path.relpath(root, src), "folder")))
                 for name in sorted(names):
                     full = os.path.join(root, name)
                     if not os.path.isfile(full):
@@ -58,15 +62,16 @@ def collect(sources):
         elif zipfile.is_zipfile(src):
             with zipfile.ZipFile(src) as z:
                 for info in z.infolist():
-                    if info.is_dir():
-                        continue
                     rel = clean_path(info.filename, "zip entry")
-                    files[join(dest, rel)] = ("zip", (src, info.filename))
+                    if info.is_dir():
+                        folders.add(join(dest, rel))
+                    else:
+                        files[join(dest, rel)] = ("zip", (src, info.filename))
         else:
             sys.exit("make-pack: not a directory or a zip file: %s" % src)
     if "pack.ini" in files:
         sys.exit("make-pack: pack.ini is written by this tool, don't include one")
-    return files
+    return files, folders
 
 
 def read(kind, source):
@@ -97,12 +102,13 @@ def main():
     parser.add_argument("sources", nargs="+", metavar="SOURCE[=DEST]")
     args = parser.parse_args()
 
-    files = collect(args.sources)
+    files, folders = collect(args.sources)
     if not files:
         sys.exit("make-pack: nothing to pack")
 
+    # every folder holding a file, and the folders that hold none (kept as entries)
     dirs = set()
-    for path in files:
+    for path in list(files) + [f + "/" for f in folders]:
         parts = path.split("/")[:-1]
         for i in range(1, len(parts) + 1):
             dirs.add("/".join(parts[:i]))

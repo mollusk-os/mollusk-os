@@ -1,0 +1,9 @@
+# Other versions of the games pack's files, which the games pack remover also
+# recognizes (md5sum format). Everything else in the pack is the same as in DrUm78's
+# FunKey OS, whose freeware_games.zip it uses unchanged.
+#
+# EDuke32's OPK, as DrUm78's FunKey OS 2.x ships it
+9b64f57e97b648d49354e7531bd2ddc9  Native games/eduke32_funkey-s.opk
+# and as the first build of the games pack 1.0 had it, before its build was made
+# reproducible (it then changed with every build)
+0182258da37054751defcfc3363b2985  Native games/eduke32_funkey-s.opk
