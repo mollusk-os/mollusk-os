@@ -161,7 +161,7 @@ It is possible to update a FunKey-S over USB:
 Firmware updates don't carry the games anymore: the games on the USB drive are left as they are (deleted ones stay deleted), and the launcher theme you picked is kept.
 
 ## Add-on packs
-Games and extra launcher themes come in add-on packs: `MolluskOS-Games-X.Y.zip` (the freeware and homebrew games, the FPS demos and EDuke32) and `MolluskOS-Themes-X.Y.zip` (animated launcher themes). To install one, copy the zip file as it is to the root of the FunKey's USB drive (with **MOUNT USB**, as above), then eject: the FunKey installs it and restarts the launcher. See [docs/packs.md](docs/packs.md), which also explains how to make your own packs.
+Games and extra launcher themes come in add-on packs: `MolluskOS-Games-X.Y.zip` (the freeware and homebrew games, the FPS demos and EDuke32) and `MolluskOS-Themes-X.Y.zip` (animated launcher themes). To install one, copy the zip file as it is to the root of the FunKey's USB drive (with **MOUNT USB**, as above), then eject: the FunKey installs it and restarts the launcher. `MolluskOS-Remove-Games-X.Y.zip`, copied the same way, removes the games pack's games again but keeps your saves, settings and own games. See [docs/packs.md](docs/packs.md), which also explains how to make your own packs.
 
 ## Credits
 Mollusk OS builds on the work of:

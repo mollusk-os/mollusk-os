@@ -7,6 +7,7 @@ in add-on packs, which you install once and keep across firmware updates:
 |---|---|
 | `MolluskOS-Games-1.0.zip` | The freeware and homebrew games that came with FunKey OS (Atari Lynx, Game Boy, Game Boy Color, Game Boy Advance, Game Gear, Neo Geo Pocket, NES, PC Engine, PICO-8, Pokémon Mini, SNES, Mega Drive, Master System), the playable demos of Wolfenstein 3D, Spear of Destiny, Doom, Quake and Quake II, and EDuke32 with the Duke Nukem 3D shareware episode |
 | `MolluskOS-Themes-1.0.zip` | Animated launcher themes: AnimatedDemo, KoiGlass, KoiLilyPond and KoiMoonlight |
+| `MolluskOS-Remove-Games-1.0.zip` | Not a pack of its own: it removes the games pack's games (see [Removing the games](#removing-the-games)) |
 
 - **A new SD card** made from the Mollusk OS image comes with the games: the
   first boot installs them, as FunKey OS always did.
@@ -41,6 +42,26 @@ If the system came from the SD card image, **Freewares** (in the Settings
 section of the GMenu2X launcher) reinstalls the games from the copy kept in
 the firmware. After a firmware update that copy is gone: copy the games pack
 to the drive instead.
+
+### Removing the games
+
+`MolluskOS-Remove-Games-1.0.zip` removes the games that the games pack (or the
+first boot of an SD card image, or DrUm78's FunKey OS) put on the drive. Copy
+it to the drive like a pack, then eject: the FunKey shows "REMOVING THE GAMES
+PACK...", deletes the zip file and restarts the launcher.
+
+It only deletes the pack's own files, and only those that haven't changed:
+
+- saves and settings the games created (in their folders or in `FunKey/`)
+  are not the pack's files, so they stay;
+- a pack file that changed since it was installed stays too, like
+  Wolfenstein 3D's `CONFIG.WL1` once you change its settings;
+- your own games stay, even in the same folders;
+- the pack's own folders (`DOOM`, `Quake`, `Wolfenstein 3D`...) go once they
+  are empty; the system folders (`Game Boy`, `SNES`...) always stay.
+
+The themes pack is not affected. To get the games back, install the games
+pack again.
 
 ## Making a pack
 
@@ -92,11 +113,39 @@ On the FunKey, packs are installed by `/usr/local/sbin/pack`
 `share` script runs whenever it mounts the drive, and `first_boot` runs for
 the packs that come with the SD card image.
 
+### Removers
+
+A remover is a pack whose `pack.ini` names the pack it removes, and which
+carries a `remove.txt` instead of files to install:
+
+```ini
+# Mollusk OS add-on pack
+name=Games remover
+version=1.0
+removes=Games
+```
+
+```
+# file <md5>[,<md5>...] <path>: deleted if it still matches one of the checksums
+file 8c9d...,1f2e... Native games/eduke32_funkey-s.opk
+# dir <path>: deleted if it is empty (the deepest first)
+dir Wolfenstein 3D
+```
+
+`tools/make-remover.py` makes one from a pack (`make packs` makes the games
+pack's): it lists every file of the pack with its checksum, and the pack's
+folders apart from the system ones the FunKey creates itself. `--also` adds
+other known versions of the files (in `md5sum` format), such as
+`packs/games/known-versions.md5` for the EDuke32 OPK of DrUm78's FunKey OS.
+Removing a pack also deletes its record in `FunKey/.packs/`.
+
 ## In this repository
 
 - `packs/games/`: the games pack's files (`freeware_games.zip` is the
-  freeware archive FunKey OS used to carry, unchanged). EDuke32's OPK is built
-  by the `eduke32` package into `FunKey/output/images/packs/games/`.
+  freeware archive FunKey OS used to carry, unchanged), and
+  `known-versions.md5` for its remover. EDuke32's OPK is built by the
+  `eduke32` package into `FunKey/output/images/packs/games/`, with fixed
+  timestamps so that it comes out the same on every build.
 - `themes/`: the launcher themes. `FunKey/board/funkey/post-build.sh` copies
   the built-in ones (KoiGlass) into the firmware; the themes pack has the
   ones listed in `THEMES_PACK_THEMES` in the `Makefile`.

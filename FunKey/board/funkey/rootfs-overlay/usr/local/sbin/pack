@@ -12,11 +12,20 @@
 # theme it contains (FunKey/.retrofe/layouts/<theme>/layout.xml) is added to
 # the user theme list, and its pack.ini is kept in FunKey/.packs/.
 #
-# Usage: pack install FILE   install the pack FILE (FILE is kept)
-#        pack scan           install every MolluskOS-*.zip pack found at the
+# A remover is a pack whose pack.ini says which pack it removes
+# (removes=Games). Instead of files to install it carries remove.txt, the
+# pack's files with their checksums ("file <md5>[,<md5>...] <path>") and its
+# folders ("dir <path>"). Each listed file that still matches one of its
+# checksums is deleted; a file that changed since, like a game's config
+# holding your settings, is kept. Then the listed folders left empty are
+# deleted. Saves and settings the games created are never in the list.
+#
+# Usage: pack install FILE   install (or, for a remover, remove) the pack FILE
+#                            (FILE is kept)
+#        pack scan           do so for every MolluskOS-*.zip pack found at the
 #                            root of the USB drive, deleting each one once it
-#                            is installed. Exits with 0 if at least one pack
-#                            was installed, 1 otherwise.
+#                            is done. Exits with 0 if at least one pack was
+#                            installed or removed, 1 otherwise.
 
 # Uncomment the following line to get debug info
 #set -x
@@ -83,9 +92,65 @@ register_theme () {
     return 0
 }
 
+# The file name of a pack's record in FunKey/.packs/
+record_file () {
+    echo "${RECORDS}/$(printf "%s" "${1}" | tr -c 'A-Za-z0-9._-' '_').ini"
+}
+
+# Remove what a pack installed, with a remover pack (see the top of this file)
+remove_pack () {
+    local file="${1}"
+    local target="${2}"
+    local label=$(echo "${target} pack" | tr 'a-z' 'A-Z')
+    local list="/tmp/pack-remove.$$"
+    local removed=0 kept=0
+    local kind sums path actual
+
+    unzip -p "${file}" remove.txt 2>/dev/null | tr -d '\r' > "${list}"
+    if [ ! -s "${list}" ]; then
+	warn "${file} has no remove.txt, skipping it"
+	rm -f "${list}"
+	return 1
+    fi
+
+    info "removing the ${target} pack, with ${file}"
+    notif set 0 " REMOVING THE ${label}...^DO NOT TURN OFF THE CONSOLE"
+
+    # The files, when they still match one of their checksums
+    while read -r kind sums path; do
+	[ "${kind}" = "file" ] && [ -f "${DRIVE}/${path}" ] || continue
+	actual=$(md5sum "${DRIVE}/${path}" | cut -d ' ' -f 1)
+	case ",${sums}," in
+	    *",${actual},"*)
+		rm -f "${DRIVE}/${path}" && removed=$((removed + 1))
+		;;
+	    *)
+		info "kept ${path}: it changed since the pack installed it"
+		kept=$((kept + 1))
+		;;
+	esac
+    done < "${list}"
+
+    # Then the pack's own folders, if that left them empty (deepest first)
+    while read -r kind path; do
+	[ "${kind}" = "dir" ] || continue
+	rmdir "${DRIVE}/${path}" 2>/dev/null
+    done < "${list}"
+
+    rm -f "${list}" "$(record_file "${target}")"
+    sync
+    info "removed ${removed} files of the ${target} pack, kept ${kept} that changed"
+    if [ ${removed} -gt 0 ]; then
+	notif set 2 " ${label} REMOVED"
+    else
+	notif set 3 " NOTHING TO REMOVE: NO^ ${label} FILES FOUND"
+    fi
+    return 0
+}
+
 install_pack () {
     local file="${1}"
-    local name version label need free record
+    local name version removes label need free
 
     if [ ! -f "${file}" ]; then
 	warn "${file}: no such file"
@@ -98,6 +163,14 @@ install_pack () {
 	warn "${file} is not a Mollusk OS pack (no name in its pack.ini), skipping it"
 	return 1
     fi
+
+    # A remover: removes another pack instead of installing anything
+    removes=$(manifest_value "${file}" removes)
+    if [ -n "${removes}" ]; then
+	remove_pack "${file}" "${removes}"
+	return $?
+    fi
+
     label=$(echo "${name} pack" | tr 'a-z' 'A-Z')
 
     # Check that the files fit on the drive (counting them all as new files)
@@ -129,8 +202,7 @@ install_pack () {
 
     # Keep a record of the installed pack
     mkdir -p "${RECORDS}"
-    record=$(printf "%s" "${name}" | tr -c 'A-Za-z0-9._-' '_')
-    unzip -p "${file}" pack.ini > "${RECORDS}/${record}.ini" 2>/dev/null
+    unzip -p "${file}" pack.ini > "$(record_file "${name}")" 2>/dev/null
 
     sync
     info "installed ${name} ${version}"
