@@ -202,13 +202,21 @@ copy_files_to_usb_partition () {
 	mount /mnt/ || die_notif 16 "Cannot mount /mnt"
     fi
 
-    # Copy freeware games and other necessary mnt files
-    unzip -q -o /usr/local/share/freeware_games.zip -d /mnt/
+    # Copy the necessary mnt files
     unzip -q -o /usr/local/share/funkey_files.zip -d /mnt/
 
     # Copy OPKs
     set +f
     cp -r /usr/local/share/OPKs/* /mnt
+    set -f
+
+    # Install the packs that come with the SD card image (the games).
+    # Firmware updates don't carry them: they are installed only here, or
+    # from a pack copied to the USB drive.
+    set +f
+    for file in /usr/local/share/packs/MolluskOS-*.zip; do
+	[ -f "${file}" ] && pack install "${file}"
+    done
     set -f
 
     # Unmount USB partition

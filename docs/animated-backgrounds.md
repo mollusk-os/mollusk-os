@@ -6,22 +6,36 @@ FunKey S (one 1.2 GHz Cortex-A7 core, 64 MB of RAM, no GPU):
 
 - Frames are stored ready to blit (RGB565), so nothing is decoded while the
   menu runs.
-- The frame file is memory-mapped, so the frames sit in the kernel's page
-  cache rather than in RetroFE's heap.
+- Each frame is read from the frame file when it is due, so the frames sit
+  in the kernel's page cache rather than in RetroFE's heap (which only holds
+  the frame on screen). The file is open only while a frame is read, so a
+  theme on the USB drive doesn't keep the drive busy and **MOUNT USB** still
+  works; while the drive is shared with a computer, the last frame stays on
+  screen.
 - The screen is only redrawn when the animation moves to its next frame, at
   the frame rate the theme asks for (capped by `animationMaxFps`).
 - After `animationIdleTimeout` seconds without a button press, the animation
   slows down to the theme's `idleFps`. At the default `idleFps` of 0 it
   pauses, and nothing is redrawn until a button is pressed.
-- When a game is launched, the file is unmapped and its cached frames are
-  dropped, so the game gets the memory back. They are mapped again when the
-  game exits.
+- When a game is launched, the file's cached frames are dropped, so the game
+  gets the memory back. They are read again when the game exits.
+
+Every new frame redraws the whole menu, which takes 9 to 11 ms on a FunKey S
+with the stock themes' layouts. So the frame rate is what costs CPU: while
+animating, AnimatedDemo (12 fps) uses about 17% of the CPU and KoiGlass
+(9 fps) about 16%. Reading each frame (rather than mapping the file) adds
+about 0.75 ms per redraw. Once the animation pauses for idling, the cost is
+zero.
 
 ## Try it
 
-Pick the **AnimatedDemo** theme in the FunKey menu (the theme option). It is
-the Classic theme with an animated water-caustics background (36 frames,
-240x240, 12 fps, about 4 MB).
+The default theme, **KoiGlass**, has an animated koi pond background (36
+frames, 240x240, 9 fps, about 4 MB). More animated themes come in the themes
+pack (see [packs.md](packs.md)): **AnimatedDemo** (the Classic theme with
+animated water caustics), **KoiLilyPond** and **KoiMoonlight**. Pick one with
+**SET THEME** in the FunKey menu.
+
+The theme sources are in the repository's `themes/` folder.
 
 ## Layout XML
 
@@ -104,9 +118,10 @@ ffmpeg -f rawvideo -pix_fmt rgb565le -s 240x240 -r 12 -i background.rgb565 previ
 ```
 
 For a seamless loop, the last frame has to lead into the first one; a clip cut
-from a longer video usually jumps at the loop point. The demo's frames come
-from `tools/make-caustics-animation.py`, which only uses motion that repeats
-exactly once per loop.
+from a longer video usually jumps at the loop point. AnimatedDemo's frames
+come from `tools/make-caustics-animation.py`, and the koi themes' from
+`tools/koi-themes/`: both only use motion that repeats a whole number of
+times per loop.
 
 ## Measuring on the FunKey S
 
@@ -117,16 +132,20 @@ exactly once per loop.
    covers 5 seconds:
 
    ```
-   t=313s renders=60 (12.0/s) draw=0.66ms avg 1.14ms max flip=0.34ms avg cpu=3.7% rss=33384kB anon=7992kB file=25164kB anim_mapped=4050kB
+   t=1307s renders=60 (12.0/s) draw=9.36ms avg 9.83ms max flip=2.42ms avg cpu=17.0% rss=12052kB anon=4840kB file=7212kB anim_file=4050kB
    ```
+
+   (AnimatedDemo on a FunKey S, while animating.)
 
    - `renders`: screen redraws. Should match the animation's fps while
      animating, and drop to 0 when idle on a still screen.
    - `draw`: time to draw the whole page; `flip`: time to copy it to the
      display.
    - `cpu`: RetroFE's CPU use over those 5 seconds (user plus system).
-   - `rss`/`anon`/`file`: RetroFE's resident memory; `file` includes the
-     cached frames. `anim_mapped` is the size of the mapped frame files.
-3. RetroFE's log (`/tmp/retrofe.log`) has a line for each frame file it maps
-   and releases (`[AnimatedImage] Mapped 36 frames ...`, `[AnimatedImage]
-   Released ...`), and warns about wrongly sized files.
+   - `rss`/`anon`/`file`: RetroFE's resident memory. The cached frames are
+     not part of it: they are in the page cache (`Cached` in
+     `/proc/meminfo`). `anim_file` is the size of the frame files in use.
+3. RetroFE's log (`/tmp/retrofe.log`) has a line for each frame file it
+   starts and stops using (`[AnimatedImage] Using 36 frames ...`,
+   `[AnimatedImage] Released ...`), warns about wrongly sized files, and
+   notes when a frame file can't be read (while the USB drive is shared).

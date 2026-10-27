@@ -29,11 +29,23 @@ MESSAGE = echo "$(shell date +%Y-%m-%dT%H:%M:%S) $(TERM_BOLD)\#\#\# $(call qstri
 TERM_BOLD := $(shell tput smso 2>/dev/null)
 TERM_RESET := $(shell tput rmso 2>/dev/null)
 
-.PHONY: fun source image update defconfig clean distclean
+.PHONY: fun source image update packs sdcard-rootfs defconfig clean distclean
+
+# Add-on packs, installed from the USB drive (see docs/packs.md)
+PACK_VERSION = 1.0
+GAMES_PACK = images/MolluskOS-Games-$(PACK_VERSION).zip
+THEMES_PACK = images/MolluskOS-Themes-$(PACK_VERSION).zip
+THEMES_PACK_THEMES = AnimatedDemo KoiGlass KoiLilyPond KoiMoonlight
+
+# The SD card images' root filesystem: the firmware's plus the games pack,
+# which first boot installs onto the USB drive. Firmware updates use the
+# plain one. Its size must match the FunKey partition in genimage*.cfg.
+SDCARD_ROOTFS = FunKey/output/images/rootfs-sdcard.ext4
+SDCARD_ROOTFS_SIZE = 450M
 
 .IGNORE: _Makefile_
 
-all: image update
+all: image update packs
 	@:
 
 _Makefile_:
@@ -99,7 +111,24 @@ source:
 	@$(BR) BR2_EXTERNAL=../Recovery O=../Recovery/output source
 	@$(BR) BR2_EXTERNAL=../FunKey O=../FunKey/output source
 
-image: fun
+packs: fun
+	@$(call MESSAGE,"Creating add-on packs")
+	@mkdir -p images
+	@python3 tools/make-pack.py --name Games --version $(PACK_VERSION) \
+		--description "Freeware and homebrew games, the demos of the FPS classics, EDuke32" \
+		--output $(GAMES_PACK) \
+		packs/games/freeware_games.zip packs/games/files FunKey/output/images/packs/games
+	@python3 tools/make-pack.py --name Themes --version $(PACK_VERSION) \
+		--description "Animated launcher themes" \
+		--output $(THEMES_PACK) \
+		$(foreach t,$(THEMES_PACK_THEMES),themes/$(t)=FunKey/.retrofe/layouts/$(t))
+
+sdcard-rootfs: fun packs
+	@$(call MESSAGE,"Creating the SD card root filesystem")
+	@./tools/make-sdcard-rootfs.sh FunKey/output/host FunKey/output/images/rootfs.ext2 \
+		$(SDCARD_ROOTFS) $(SDCARD_ROOTFS_SIZE) $(GAMES_PACK)
+
+image: sdcard-rootfs
 	@$(call MESSAGE,"Creating disk image")
 	@rm -rf root tmp
 	@mkdir -p root tmp
@@ -107,7 +136,7 @@ image: fun
 	@rm -rf root tmp
 	@mv images/sdcard.img images/FunKey-sdcard-DrUm78.img
 
-image-prod: fun
+image-prod: sdcard-rootfs
 	@$(call MESSAGE,"Creating disk image")
 	@rm -rf root tmp
 	@mkdir -p root tmp

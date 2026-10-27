@@ -15,7 +15,12 @@ EDUKE32_LICENSE_FILES = polymer/eduke32/GNU.TXT polymer/eduke32/buildlic.txt
 EDUKE32_DEPENDENCIES = sdl sdl_mixer libmikmod libogg host-squashfs
 
 EDUKE32_SRC_DIR = $(@D)/polymer/eduke32
-EDUKE32_OPK_DIR = $(TARGET_DIR)/usr/local/share/OPKs/Native games
+
+# The OPK (with the shareware episode) goes into the games pack, not the
+# firmware: the top-level Makefile packs $(BINARIES_DIR)/packs/games
+EDUKE32_INSTALL_TARGET = NO
+EDUKE32_INSTALL_IMAGES = YES
+EDUKE32_OPK_DIR = $(BINARIES_DIR)/packs/games/Native games
 
 define EDUKE32_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) -C $(EDUKE32_SRC_DIR) \
@@ -26,7 +31,7 @@ define EDUKE32_BUILD_CMDS
 endef
 
 # Same layout as build_funkey.sh: the game data in opk/ plus the binary
-define EDUKE32_INSTALL_TARGET_CMDS
+define EDUKE32_INSTALL_IMAGES_CMDS
 	rm -rf $(@D)/opk-build
 	cp -a $(EDUKE32_SRC_DIR)/opk $(@D)/opk-build
 	$(INSTALL) -m 0755 $(EDUKE32_SRC_DIR)/eduke32 $(@D)/opk-build/eduke32

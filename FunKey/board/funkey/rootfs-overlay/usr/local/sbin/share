@@ -66,6 +66,21 @@ mount_share () {
 	    break
 	fi
     done
+
+    # Install the add-on packs (MolluskOS-*.zip) copied to the drive
+    pack scan && packs_installed=yes
+    return 0
+}
+
+# Restart the frontend, so that it shows newly installed games and themes
+restart_frontend () {
+    local frontend=$(frontend get)
+    case "${frontend}" in
+	gmenu2x|retrofe)
+	    info "restarting ${frontend}"
+	    pkill -x "${frontend}"
+	    ;;
+    esac
     return 0
 }
 
@@ -94,6 +109,11 @@ stop_share () {
     mount_share
 
     info "stopped sharing the backing store partition"
+
+    # The frontend reads its games and themes only when it starts
+    if [ -n "${packs_installed}" ]; then
+	restart_frontend
+    fi
 
     return 0
 }

@@ -7,6 +7,9 @@ root_part_num=2
 root_part=/dev/mmcblk0p${root_part_num}
 root_mount=/tmp/rootfs
 
+# The launcher theme chosen in the system being replaced
+saved_layout=/tmp/layout.conf.saved
+
 # Compatibility issue with older Recovery notifications
 if [ -x /usr/local/sbin/notif ]; then
     alias notif_set="notif set"
@@ -15,7 +18,33 @@ fi
 do_preinst()
 {
     notif_set 0 " 1/4 EXTRACT FIRMWARE UPDATE..^DO NOT TURN OFF THE CONSOLE"
+
+    # Save the chosen theme before the root filesystem gets replaced
+    # (read-only, without replaying the journal: nothing is written).
+    # Only from a Mollusk OS system with add-on packs (it has the pack
+    # tool): coming from an older firmware, start with the default theme.
+    rm -f ${saved_layout}
+    mkdir -p ${root_mount}
+    if mount -t ext4 -o ro,noload ${root_part} ${root_mount} 2>/dev/null; then
+        if [ -x ${root_mount}/usr/local/sbin/pack ]; then
+            cp ${root_mount}/usr/games/layout.conf ${saved_layout} 2>/dev/null
+        fi
+        umount ${root_mount}
+    fi
     exit 0
+}
+
+# Put back the saved theme, if that theme is still installed
+restore_layout()
+{
+    [ -s ${saved_layout} ] || return 0
+    local theme=$(head -n 1 ${saved_layout} | tr -d '\r')
+    [ -n "${theme}" ] || return 0
+    if [ -d "${root_mount}/usr/games/layouts/${theme}" ] || \
+       [ -d "/mnt/FunKey/.retrofe/layouts/${theme}" ]; then
+        cp ${saved_layout} ${root_mount}/usr/games/layout.conf
+    fi
+    return 0
 }
 
 do_postinst()
@@ -44,11 +73,15 @@ do_postinst()
         exit 1
     fi
     
+    # Keep the theme chosen before the update
+    restore_layout
+
     # Copy OPKs
     cp -r ${root_mount}/usr/local/share/OPKs/* /mnt
 
-    # Copy freeware games and other necessary mnt files
-    unzip -q -n ${root_mount}/usr/local/share/freeware_games.zip -d /mnt/
+    # Copy the necessary mnt files (without overwriting them). The games
+    # are not part of firmware updates anymore: they come in the games
+    # pack, so the ones that were deleted stay deleted.
     unzip -q -n ${root_mount}/usr/local/share/funkey_files.zip -d /mnt/
 
     # Remove previous OPKs for default emulators
