@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Alex <306578489+hourlysword@users.noreply.github.com>
+Date: Thu, 29 Oct 2026 19:24:46 -0400
+Subject: [PATCH] ARM: dts: sun8i: v3s: Add the CPU's performance counters
+
+The V3s device tree has no node for the Cortex-A7's performance
+monitoring unit (PMU), so perf only offers software events. Add it, so
+hardware events such as CPU cycles and instructions can be counted and
+sampled.
+
+The overflow interrupt is SPI 120: the V3s uses the H3's interrupt
+numbers for the devices both device trees describe (DMA, MMC, USB,
+UART, I2C, SPI, timer, watchdog, codec, Ethernet), and SPI 120 is CPU0's
+PMU interrupt on the H3. cpu@0 gets a label for interrupt-affinity.
+
+Tested on a FunKey S: the armv7_cortex_a7 PMU registers with 5
+counters, sampling every million cycles raises one SPI 120 interrupt
+per sample, and an 8-second count reaches 7.5 billion cycles (past
+2^32; about 94% of the 1008 MHz clock, the rest going to other tasks),
+so counter overflows are caught.
+---
+ arch/arm/boot/dts/sun8i-v3s.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+index 42e5b3b..8d73cd2 100644
+--- a/arch/arm/boot/dts/sun8i-v3s.dtsi
++++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+@@ -68,7 +68,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
+ 			reg = <0>;
+@@ -93,6 +93,12 @@
+ 		status = "disabled";
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>;
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
