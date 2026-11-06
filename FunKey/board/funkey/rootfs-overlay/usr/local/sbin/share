@@ -154,7 +154,9 @@ is_usb_data_connected () {
     local usb_present=$(cat /sys/class/power_supply/axp20x-usb/present)
 
     # Get udc state
-    local udc_state=$(cat /sys/class/udc/musb-hdrc.1.auto/state)
+    # The controller gets its name when it is probed, so find it as usb_gadget does
+    local udc_driver=$(ls /sys/class/udc | cut -f1 | head -n 1)
+    local udc_state=$(cat /sys/class/udc/${udc_driver}/state 2>/dev/null)
 
     if [ "x${udc_state}" = "xconfigured" -a "${usb_present}" -eq 1 ]; then
 
