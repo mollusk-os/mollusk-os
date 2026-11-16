@@ -1,0 +1,15 @@
+Winter Songbirds - a Mollusk OS launcher theme
+
+Layout: the stock FunKey theme's layout.xml from FunKey-OS, with an animated background
+(<animatedImage>), new colors, bars and icons, as in the koi themes.
+
+Snow, birds, plants and tracks: drawn and animated by HourlySword
+(Copyright (c) 2026 HourlySword). Each of the 36 frames is rendered from an HTML canvas
+scene, posed so that the loop repeats exactly.
+
+System icons: the FunKey-OS theme device pictures, recolored, with a soft halo;
+the arcade, PICO-8 and Pokemon Mini icons are the koi themes' own.
+Font: Roboto Bold by Christian Robertson (Apache License 2.0).
+Sounds: the Classic theme's sounds (theme by TimmyB).
+  Highlight.wav by orginaljun - orginaljun.deviantart.com
+  http://www.freesound.org/people/orginaljun/sounds/157871/

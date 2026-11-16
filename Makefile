@@ -44,7 +44,7 @@ PACK_VERSION = 1.0
 GAMES_PACK = images/MolluskOS-Games-$(PACK_VERSION).zip
 GAMES_REMOVER = images/MolluskOS-Remove-Games-$(PACK_VERSION).zip
 THEMES_PACK = images/MolluskOS-Themes-$(PACK_VERSION).zip
-THEMES_PACK_THEMES = AnimatedDemo KoiGlass KoiLilyPond KoiMoonlight
+THEMES_PACK_THEMES = AnimatedDemo KoiGlass KoiLilyPond KoiMoonlight LeafcutterTrail SandsnipperShore WinterSongbirds
 
 # The SD card images' root filesystem: the firmware's plus the games pack,
 # which first boot installs onto the USB drive. Firmware updates use the

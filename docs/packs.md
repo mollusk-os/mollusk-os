@@ -6,7 +6,7 @@ in add-on packs, which you install once and keep across firmware updates:
 | Pack | What's in it |
 |---|---|
 | `MolluskOS-Games-1.0.zip` | The freeware and homebrew games that came with FunKey OS (Atari Lynx, Game Boy, Game Boy Color, Game Boy Advance, Game Gear, Neo Geo Pocket, NES, PC Engine, PICO-8, Pokémon Mini, SNES, Mega Drive, Master System), the playable demos of Wolfenstein 3D, Spear of Destiny, Doom, Quake and Quake II, and EDuke32 with the Duke Nukem 3D shareware episode |
-| `MolluskOS-Themes-1.0.zip` | Animated launcher themes: AnimatedDemo, KoiGlass, KoiLilyPond and KoiMoonlight |
+| `MolluskOS-Themes-1.0.zip` | Animated launcher themes: AnimatedDemo, the koi themes (KoiGlass, KoiLilyPond, KoiMoonlight) and the nature themes (LeafcutterTrail, SandsnipperShore, WinterSongbirds) |
 | `MolluskOS-Remove-Games-1.0.zip` | Not a pack of its own: it removes the games pack's games (see [Removing the games](#removing-the-games)) |
 
 - **A new SD card** made from the Mollusk OS image comes with the games: the

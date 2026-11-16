@@ -32,8 +32,11 @@ zero.
 The default theme, **KoiGlass**, has an animated koi pond background (36
 frames, 240x240, 9 fps, about 4 MB). More animated themes come in the themes
 pack (see [packs.md](packs.md)): **AnimatedDemo** (the Classic theme with
-animated water caustics), **KoiLilyPond** and **KoiMoonlight**. Pick one with
-**SET THEME** in the FunKey menu.
+animated water caustics), **KoiLilyPond** and **KoiMoonlight**, and the
+nature themes, seen from above like the koi pond: **SandsnipperShore** (waves
+washing up a beach, with sandpipers and crabs), **LeafcutterTrail** (a column
+of leafcutter ants on a forest floor) and **WinterSongbirds** (songbirds in a
+snowy clearing). Pick one with **SET THEME** in the FunKey menu.
 
 The theme sources are in the repository's `themes/` folder.
 
@@ -119,9 +122,12 @@ ffmpeg -f rawvideo -pix_fmt rgb565le -s 240x240 -r 12 -i background.rgb565 previ
 
 For a seamless loop, the last frame has to lead into the first one; a clip cut
 from a longer video usually jumps at the loop point. AnimatedDemo's frames
-come from `tools/make-caustics-animation.py`, and the koi themes' from
-`tools/koi-themes/`: both only use motion that repeats a whole number of
-times per loop.
+come from `tools/make-caustics-animation.py`, the koi themes' from
+`tools/koi-themes/`, and the nature themes' from HTML canvas scenes by their
+author, posed frame by frame: all of them only use motion that repeats a
+whole number of times per loop (a wave that comes in once, wings that beat
+a whole number of times, a column of ants or falling snow that moves on by
+exactly one repeat of its pattern).
 
 ## Measuring on the FunKey S
 
