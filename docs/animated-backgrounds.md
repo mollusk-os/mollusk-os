@@ -35,8 +35,9 @@ pack (see [packs.md](packs.md)): **AnimatedDemo** (the Classic theme with
 animated water caustics), **KoiLilyPond** and **KoiMoonlight**, and the
 nature themes, seen from above like the koi pond: **SandsnipperShore** (waves
 washing up a beach, with sandpipers and crabs), **LeafcutterTrail** (a column
-of leafcutter ants on a forest floor) and **WinterSongbirds** (songbirds in a
-snowy clearing). Pick one with **SET THEME** in the FunKey menu.
+of leafcutter ants on a forest floor), **WinterSongbirds** (songbirds in a
+snowy clearing) and **PikaPeak** (pikas and a marmot among the boulders of an
+alpine meadow). Pick one with **SET THEME** in the FunKey menu.
 
 The theme sources are in the repository's `themes/` folder.
 
@@ -125,9 +126,9 @@ from a longer video usually jumps at the loop point. AnimatedDemo's frames
 come from `tools/make-caustics-animation.py`, the koi themes' from
 `tools/koi-themes/`, and the nature themes' from HTML canvas scenes by their
 author, posed frame by frame: all of them only use motion that repeats a
-whole number of times per loop (a wave that comes in once, wings that beat
-a whole number of times, a column of ants or falling snow that moves on by
-exactly one repeat of its pattern).
+whole number of times per loop (a wave that comes in once, a pika that runs
+out and back, wings that beat a whole number of times, a column of ants or
+falling snow that moves on by exactly one repeat of its pattern).
 
 ## Measuring on the FunKey S
 
