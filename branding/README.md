@@ -2,16 +2,18 @@
 
 ## Logo
 
-The Mollusk OS logo is a chambered nautilus (an operating system's command line is a "shell"
-too), in the teal of the KoiGlass theme with a koi-orange core, and "mollusk OS" in Comfortaa
-Bold (SIL Open Font License; the lettering is converted to outlines).
+The Mollusk OS logo is a cuttlefish made of dots. A cuttlefish's skin changes color and
+pattern at will; here it is made of dots, like screen pixels, with bands of color passing
+over them, the way Mollusk OS changes themes. "MOLLUSK OS" is in dot-matrix lettering in the
+same colors, drawn as dots, so no font is involved.
 
 | File | What it is |
 |---|---|
-| `logo/symbol.svg` | The nautilus alone, transparent background |
-| `logo/logo-light.svg` | Nautilus and name side by side, for light backgrounds |
+| `logo/symbol.svg` | The cuttlefish alone, transparent background, in the colors for light backgrounds |
+| `logo/symbol-dark.svg` | The same in lighter colors, for dark backgrounds |
+| `logo/logo-light.svg` | Cuttlefish and name side by side, for light backgrounds |
 | `logo/logo-dark.svg` | The same, for dark backgrounds |
-| `logo/logo-stacked-dark.svg` | The nautilus above the name, for dark backgrounds (the boot screen's layout) |
+| `logo/logo-stacked-dark.svg` | The cuttlefish above the name, for dark backgrounds (the boot screen's layout) |
 
 ## Boot logos
 
@@ -37,4 +39,4 @@ docker/build.sh FunKey/linux-dirclean Recovery/linux-dirclean all
 ```
 
 The logo was chosen from several drafts (kept outside the repository, with the tool that
-draws them).
+draws them). It replaced the first logo, a nautilus, before the first release.
