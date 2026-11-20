@@ -1,0 +1,21 @@
+Sandsnipper Shore, a launcher theme for Mollusk OS
+
+The art made for Mollusk OS is by HourlySword and is licensed under the
+Creative Commons Attribution 4.0 International License (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+
+It is:
+- the animated background, animations/shore.rgb565;
+- the images in images/ and the splash screen, splash.xml;
+- the arcade, PICO-8 and Pokemon Mini icons, and the recoloring and halo of
+  the other system icons;
+- the changes to the stock FunKey layout in layout.xml.
+
+The other parts keep their own terms:
+- layout.xml starts from the stock FunKey theme of FunKey-OS, and the other
+  system icons are its device pictures (theme by TimmyB);
+- the sounds are the Classic theme's (theme by TimmyB); Highlight.wav is by
+  orginaljun, under CC BY 4.0;
+- the font, Open Sans Bold, is under the Apache License 2.0: see LICENSE-Apache-2.0.txt.
+
+Credits.txt says who made what.
