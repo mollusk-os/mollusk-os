@@ -33,7 +33,12 @@ Each frame file is 36 frames of 240x240 RGB565 (4 MB); see
 
 ## Licenses
 
-The koi renderer comes from my other projects (MIT). Colors and the lily pad,
-water lily, lantern and moon designs follow my other projects (CC BY-NC-SA
-4.0). Both are by HourlySword. Fonts: Cabin (SIL OFL 1.1), Open
-Sans and Roboto (Apache 2.0).
+These tools are GPL-2.0-or-later, like the rest of the source Mollusk OS adds.
+The koi renderer they include comes from my other projects (MIT), and the
+pond's colors and shapes follow the pond designs there; both are by
+HourlySword.
+
+The art they make is by HourlySword, under CC BY 4.0. Each theme folder in
+`themes/` also has a `LICENSE.txt` and its font's license (Cabin: SIL OFL
+1.1; Open Sans and Roboto: Apache 2.0), which these tools don't write: keep
+them when a theme is replaced with a newly generated one.

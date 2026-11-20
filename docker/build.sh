@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Build Mollusk OS inside the Docker build environment
 #
 # Usage: docker/build.sh [make targets...]   (default: all)

@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 # Install Mollusk OS add-on packs (games, themes...) onto the USB drive
 #
@@ -10,7 +11,7 @@
 #
 # Its files are extracted onto the drive, overwriting older copies. Every
 # theme it contains (FunKey/.retrofe/layouts/<theme>/layout.xml) is added to
-# the user theme list, and its pack.ini is kept in FunKey/.packs/.
+# the theme list on the drive, and its pack.ini is kept in FunKey/.packs/.
 #
 # A remover is a pack whose pack.ini says which pack it removes
 # (removes=Games). Instead of files to install it carries remove.txt, the
@@ -70,13 +71,13 @@ drive_free_kb () {
     df -Pk "${DRIVE}" 2>/dev/null | awk 'NR > 1 && $4 ~ /^[0-9]+$/ { print $4; exit }'
 }
 
-# Add a theme to the user theme list, unless it is built in or already listed
+# Add a theme to the theme list on the drive, unless it is built in or already listed
 register_theme () {
     local theme="${1}"
     local list="${USER_LAYOUTS}/layouts.list"
 
     if [ -d "${BUILTIN_LAYOUTS}/${theme}" ]; then
-	info "${theme} is a built-in theme, not adding it to the user theme list"
+	info "${theme} is a built-in theme, not adding it to the theme list on the drive"
 	return 0
     fi
     if [ -f "${list}" ] && tr -d '\r' < "${list}" | grep -qxF "${theme}"; then

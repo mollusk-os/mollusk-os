@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Generate the looping water-caustics background used by the AnimatedDemo theme.
 
 Writes headerless RGB565 little-endian frames back to back, the format the

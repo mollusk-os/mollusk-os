@@ -1,4 +1,5 @@
 @echo off
+:: SPDX-License-Identifier: GPL-2.0-or-later
 setlocal
 :: Builds koi_frames.exe with Windhawk's clang.
 :: It includes koi_pond.h, the koi renderer from my other projects, from the folder

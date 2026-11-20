@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Make the kernel boot logos from the Mollusk OS logo.
 
 The FunKey's kernel shows a 240x240 logo while it boots, made at build time from a plain

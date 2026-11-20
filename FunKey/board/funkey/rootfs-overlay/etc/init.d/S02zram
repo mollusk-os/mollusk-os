@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Compressed swap in RAM (zram), used before the swap partition on the SD card.
 #
 # Memory pages that would otherwise be written to the SD card are compressed

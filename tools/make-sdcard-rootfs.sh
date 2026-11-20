@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 # Make the SD card image's root filesystem: a copy of the firmware's, grown
 # to SIZE, with the given packs stored in /usr/local/share/packs. First boot
 # installs them onto the USB drive (see first_boot), so a fresh SD card comes

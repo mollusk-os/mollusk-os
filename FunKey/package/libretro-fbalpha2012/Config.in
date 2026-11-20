@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
 config BR2_PACKAGE_LIBRETRO_FBALPHA2012
 	bool "libretro-fbalpha2012"
 	default y

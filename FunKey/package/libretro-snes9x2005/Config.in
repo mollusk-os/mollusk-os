@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
 config BR2_PACKAGE_LIBRETRO_SNES9X2005
 	bool "libretro-snes9x2005"
 	default y

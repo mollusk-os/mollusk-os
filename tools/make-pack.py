@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Build a Mollusk OS add-on pack.
 
 A pack is a zip file whose contents mirror the FunKey's USB drive, with a
@@ -42,7 +43,7 @@ def join(dest, rel):
 
 def collect(sources):
     """Return {path in the pack: (kind, source)} for every file, and the folders the
-    sources list, so that empty ones (e.g. a place for the user to put something) are
+    sources list, so that empty ones (e.g. a place for the player to put something) are
     kept."""
     files, folders = {}, set()
     for spec in sources:

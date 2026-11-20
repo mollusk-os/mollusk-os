@@ -90,7 +90,7 @@ When a pack is installed:
 
 - every file is extracted onto the drive, overwriting older copies;
 - every theme in it (a `FunKey/.retrofe/layouts/<theme>/layout.xml`) is added
-  to the user theme list, `FunKey/.retrofe/layouts/layouts.list`, unless the
+  to the theme list on the drive, `FunKey/.retrofe/layouts/layouts.list`, unless the
   list has it already or a built-in theme has the same name;
 - its `pack.ini` is kept as `FunKey/.packs/<name>.ini`;
 - if the drive doesn't have room for all its files, nothing is installed.
@@ -157,6 +157,7 @@ Removing a pack also deletes its record in `FunKey/.packs/`.
 
 The games keep their own licenses: each system folder has a
 `Copyrights.txt`. The demos of the FPS classics are the freely distributable
-shareware or demo releases of their games. The koi themes' art is by
-HourlySword (koi from my other projects, MIT; pond designs after my other
-projects, CC BY-NC-SA 4.0); see each theme's `Credits.txt`.
+shareware or demo releases of their games. The art made
+for the themes is by HourlySword, under CC BY 4.0; the parts they take from
+other themes, their sounds and their fonts keep their own terms (see each
+theme's `LICENSE.txt` and `Credits.txt`).

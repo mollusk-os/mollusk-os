@@ -1,0 +1,14 @@
+AnimatedDemo, a launcher theme for Mollusk OS
+
+The animated water-caustics background, animations/caustics.rgb565, and the
+changes to the Classic theme's layout that show it are by HourlySword, made
+for Mollusk OS, and are licensed under the Creative Commons Attribution 4.0
+International License (CC BY 4.0):
+https://creativecommons.org/licenses/by/4.0/
+
+Everything else is the Classic theme by TimmyB and keeps its own terms: the
+layout it starts from, the collections, images and sounds (Highlight.wav is
+by orginaljun, under CC BY 4.0) and the font, Roboto Bold, which is under the
+Apache License 2.0: see LICENSE-Apache-2.0.txt.
+
+Credits.txt says who made what.

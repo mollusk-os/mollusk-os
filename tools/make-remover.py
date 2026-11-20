@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-2.0-or-later
 """Build the remover of a Mollusk OS add-on pack.
 
 A remover is a pack too: a MolluskOS-*.zip copied to the root of the USB drive, whose

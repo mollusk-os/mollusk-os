@@ -163,10 +163,14 @@ Firmware updates don't carry the games anymore: the games on the USB drive are l
 ## Add-on packs
 Games and extra launcher themes come in add-on packs: `MolluskOS-Games-X.Y.zip` (the freeware and homebrew games, the FPS demos and EDuke32) and `MolluskOS-Themes-X.Y.zip` (animated launcher themes). To install one, copy the zip file as it is to the root of the FunKey's USB drive (with **MOUNT USB**, as above), then eject: the FunKey installs it and restarts the launcher. `MolluskOS-Remove-Games-X.Y.zip`, copied the same way, removes the games pack's games again but keeps your saves, settings and own games. See [docs/packs.md](docs/packs.md), which also explains how to make your own packs.
 
+## Contact
+hourlysword.dev@gmail.com: bugs, suggestions, rights-holder requests.
+
 ## Credits
 Mollusk OS builds on the work of:
  - **The FunKey Project**, Michel Stempin and Vincent Buso: the [FunKey S console](https://www.funkey-project.com/) and the original [FunKey OS](https://github.com/FunKey-Project/FunKey-OS).
  - **DrUm78**: [DrUm78's FunKey-OS](https://github.com/DrUm78/FunKey-OS), the community FunKey OS that Mollusk OS is a fork of.
  - The open-source projects it is built from (Buildroot, Linux, U-Boot, RetroFE, GMenu2X, picoarch, the libretro cores, SDL and many more), each under its own license.
+ - Developed with the help of AI: see [docs/AI_DISCLOSURE.md](docs/AI_DISCLOSURE.md).
 
 Their commits are kept in this repository's history. Mollusk OS is an independent fork, not an official FunKey Project release, so its boot screen shows the Mollusk OS logo (see [branding/](branding/README.md)) rather than the FunKey S and DrUm78 logos; the FunKey name and logo belong to the FunKey Project.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
 // Mollusk OS - koi pond backgrounds for RetroFE's <animatedImage> (koi theme drafts).
 //
 // Renders seamless 240x240 loops of a koi pond, writes them as headerless RGB565
